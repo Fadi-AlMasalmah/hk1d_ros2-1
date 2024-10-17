@@ -25,17 +25,17 @@ controller_manager:
 # Broadcasters
 master_force_sensor_broadcaster:
   ros__parameters:
-    frame_id: master_ft_sensor
+    frame_id: master_force_sensor
     interface_names:
       force:
-        x: master_ft_sensor/force.0
+        x: master_force_sensor/force.0
 
 follower_force_sensor_broadcaster:
   ros__parameters:
-    frame_id: follower_ft_sensor
+    frame_id: follower_force_sensor
     interface_names:
       force:
-        x: follower_ft_sensor/force.0
+        x: follower_force_sensor/force.0
 
 # Controllers
 forward_position_controller:

@@ -6,6 +6,7 @@
     <xacro:arg name="use_fake_hardware" default="true" />
     <xacro:arg name="namespace" default="/" />
     <xacro:arg name="command_interface" default="force" />
+    <xacro:arg name="control_freq" default="200" />
 
     <xacro:arg name="runtime_config_package" default="hk1d_bringup" />
     <xacro:arg name="controllers_file" default="hk1d_controllers.yaml" />
@@ -35,7 +36,7 @@
         use_sim="$(arg use_sim)"
         use_fake_hardware="$(arg use_fake_hardware)"
         command_interface="$(arg command_interface)"
-        control_freq="200"
+        control_freq="$(arg control_freq)"
         runtime_config_package="$(arg runtime_config_package)"
     />
 

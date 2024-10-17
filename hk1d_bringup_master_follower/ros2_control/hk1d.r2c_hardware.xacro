@@ -19,9 +19,9 @@
                     <param name="calculate_dynamics">true</param>
                 </xacro:if>
                 <xacro:unless value="${use_fake_hardware}">
-                        <plugin> ethercat_driver/EthercatDriver </plugin>
-                        <param name="master_id"> 0 </param>
-                        <param name="control_frequency"> $(arg control_freq) </param>
+                        <plugin>ethercat_driver/EthercatDriver</plugin>
+                        <param name="master_id">0</param>
+                        <param name="control_frequency">$(arg control_freq)</param>
                 </xacro:unless>
             </hardware>
         </xacro:unless>
