@@ -32,7 +32,7 @@
             <param name="alias"> 0 </param>
             <param name="position"> ${motor_ec_id} </param>
             <param name="mode_of_operation"> 10 </param>
-            <param name="slave_config">$(find ${ec_config_package})/config/${ec_motor_config_file}</param>
+            <param name="slave_config">${ec_config_package}/config/${ec_motor_config_file}</param>
           </ec_module>
         </xacro:unless>
       </joint>
@@ -47,7 +47,7 @@
                   <plugin>ethercat_generic_plugins/GenericEcSlave</plugin>
                   <param name="alias">0</param>
                   <param name="position">${sensor_ec_id}</param>
-                  <param name="slave_config">$(find ${ec_config_package})/config/${ec_sensor_config_file}</param>
+                  <param name="slave_config">${ec_config_package}/config/${ec_sensor_config_file}</param>
               </ec_module>
           </xacro:unless>
       </sensor>
