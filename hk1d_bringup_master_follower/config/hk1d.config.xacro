@@ -31,7 +31,7 @@
 
     <!-- Add ros2_control tags -->
     <xacro:include filename="$(find hk1d_bringup_master_follower)/ros2_control/hk1d.r2c_hardware.xacro" />
-    <xacro:kk1d_r2c_hardware
+    <xacro:hk1d_r2c_hardware
         use_sim="$(arg use_sim)"
         use_fake_hardware="$(arg use_fake_hardware)"
         command_interface="$(arg command_interface)"

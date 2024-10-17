@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:macro
-        name="kk1d_r2c_hardware"
+        name="hk1d_r2c_hardware"
         params="use_sim use_fake_hardware command_interface control_freq runtime_config_package">
 
     <ros2_control name="hk1d_based_system" type="system">

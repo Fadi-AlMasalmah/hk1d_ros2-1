@@ -29,7 +29,7 @@
 
     <!-- Add ros2_control tags -->
     <xacro:include filename="$(find ${description_package})/ros2_control/hk1d.r2c_hardware.xacro" />
-    <xacro:kk1d_r2c_hardware
+    <xacro:hk1d_r2c_hardware
         prefix="$(arg prefix)"
         use_sim="$(arg use_sim)"
         use_fake_hardware="$(arg use_fake_hardware)"
