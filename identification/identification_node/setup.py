@@ -15,11 +15,12 @@ setup(
     zip_safe=True,
     maintainer='fadi',
     maintainer_email='fadi.almasalmah94@gmail.com',
-    description='TODO: Package description',
+    description='a package that sends position reference to the hk1d robot for identification',
     license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'identification_node = identification_node.identification_node:main',
         ],
     },
 )

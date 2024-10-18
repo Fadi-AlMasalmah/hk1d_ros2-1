@@ -58,8 +58,8 @@ identification_controller_cl:
     joints:
       - joint_1
     max_torque: [0.3] # in EPOS3 units 
-    Kp: [2.0]
-    Kd: [0.05]
-    dela_at_start_in_counts: [500.0] # how many time steps, however double for now
+    Kp: [4.0]
+    Kd: [0.08]
+    dela_at_start_in_counts: [300.0] # how many time steps, however double for now
     max_pos : [0.6]
     min_pos : [-0.6]
