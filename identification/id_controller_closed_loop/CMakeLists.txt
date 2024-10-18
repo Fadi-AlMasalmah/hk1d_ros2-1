@@ -21,6 +21,7 @@ find_package(realtime_tools REQUIRED)
 find_package(trajectory_msgs REQUIRED)
 find_package(hk1d_interfaces REQUIRED)
 find_package(stamped_array_msgs REQUIRED)
+find_package(hk1d_identification_interfaces REQUIRED)
 
 add_library(identification_controller_cl
   SHARED
@@ -38,6 +39,7 @@ ament_target_dependencies(identification_controller_cl
   trajectory_msgs
   hk1d_interfaces
   stamped_array_msgs
+  hk1d_identification_interfaces  
 )
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.

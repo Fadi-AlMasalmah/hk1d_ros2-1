@@ -32,7 +32,8 @@ using hardware_interface::LoanedCommandInterface;
 IdentificationControllerCL::IdentificationControllerCL()
 : controller_interface::ControllerInterface(),
   rt_command_ptr_(nullptr),
-  joints_command_subscriber_(nullptr)
+  joints_command_subscriber_(nullptr),
+  identification_publisher_(nullptr)
 {
 }
 
@@ -112,6 +113,8 @@ CallbackReturn IdentificationControllerCL::on_configure(
     "~/ref_pos", rclcpp::SystemDefaultsQoS(),
     [this](const CmdType::SharedPtr msg) { rt_command_ptr_.writeFromNonRT(msg); });
 
+  identification_publisher_ = get_node()->create_publisher<hk1d_identification_interfaces::msg::Hk1dIdentification>(
+    "~/identification_info", rclcpp::SystemDefaultsQoS());
   RCLCPP_INFO(get_node()->get_logger(), "configure successful");
   return CallbackReturn::SUCCESS;
 }
@@ -242,15 +245,15 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
   for (auto index = 0ul; index < joint_names_.size(); ++index)
   {
     double tau = 0;
-    double x_d = ref_pos;
+    // double x_d = ref_pos;
     // if(point_id < ref_poses_.size())
     //    x_d = ref_poses_[point_id];
   
-    tau = Kp_[0] * (x_d - state_interfaces_[0].get_value()) + Kd_[0] * (0 - state_interfaces_[1].get_value()) ;
+    tau = Kp_[0] * (ref_pos - state_interfaces_[0].get_value()) + Kd_[0] * (0 - state_interfaces_[1].get_value()) ;
     
     
 
-//Test to make the robot moves by it self
+    //Test to make the robot moves by it self
     // if((state_interfaces_[0].get_value() > max_pos && state_interfaces_[1].get_value() > 0) || (state_interfaces_[0].get_value() < -max_pos && state_interfaces_[1].get_value() < 0))
     //   tau = -tau;    
     // if( tau > 0)  //state_interfaces_[0].get_value() > 2 &&
@@ -266,12 +269,33 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
     command_interfaces_[index].set_value(tau);
     point_id++;
 
+
     if(counter_%1000 == 0)
-      RCLCPP_INFO( get_node()->get_logger(), " Torque command %d  = %f, and xd = %f ", point_id, tau, x_d);
+      RCLCPP_INFO( get_node()->get_logger(), " Torque command %d  = %f, and xd = %f ", point_id, tau, ref_pos);
+  
+    // fill the identification message
+    auto msg = hk1d_identification_interfaces::msg::Hk1dIdentification();
+    // std_msgs/String joint_name
+    // std_msgs/Float64 measured_joint_position
+    // std_msgs/Float64 measured_joint_velocity
+    // std_msgs/Float64 measured_joint_effort
+    // std_msgs/Float64 measured_joint_acceleration
+    // std_msgs/Float64 reference_joint_position
+    // std_msgs/Float64 reference_effort
+    msg.header.stamp = time;
+    // msg.header.frame_id = "base_link";
+    // msg.joint_name = joint_names_[index];
+    msg.measured_joint_position = state_interfaces_[0].get_value();
+    msg.measured_joint_velocity = state_interfaces_[1].get_value();
+    msg.measured_joint_effort = state_interfaces_[1].get_value();
+    msg.reference_joint_position = ref_pos;
+    msg.reference_effort = tau;
+    identification_publisher_->publish(msg);
   }
 
   return controller_interface::return_type::OK;
 }
+
 
 }  // namespace identification_controller_cl
 

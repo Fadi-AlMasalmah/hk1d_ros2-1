@@ -27,6 +27,8 @@
 #include "realtime_tools/realtime_buffer.h"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
 #include "std_msgs/msg/float64.hpp"
+// #include "hk1d_interfaces/msg/diagnostics.hpp"
+#include "hk1d_identification_interfaces/msg/hk1d_identification.hpp"
 
 namespace identification_controller_cl
 {
@@ -100,6 +102,8 @@ protected:
   rclcpp::Subscription<CmdType>::SharedPtr joints_command_subscriber_;
 
   std::string logger_name_;
+
+  rclcpp::Publisher<hk1d_identification_interfaces::msg::Hk1dIdentification>::SharedPtr identification_publisher_;
 
 };
 

@@ -18,6 +18,7 @@ from rclpy.node import Node
 # from std_msgs.msg import String
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from math import sin
+from std_msgs.msg import Float64 as FloatMsg
 
 
 class IdentificationNode(Node):
@@ -28,6 +29,16 @@ class IdentificationNode(Node):
         timer_period = 0.002  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.i = 0
+
+        # publish simulation time to syncronize ros2 bags for the  plots
+        simulation_time_topic_name = 'simulation_time'
+        self._publisher_simulation_time = self.create_publisher(
+            FloatMsg,
+            simulation_time_topic_name,
+            5
+        )
+        self._t0 = self.get_clock().now()
+
 
     def timer_callback(self):
         msg = JointTrajectory()
@@ -43,6 +54,19 @@ class IdentificationNode(Node):
         self.publisher_.publish(msg)
         # self.get_logger().info('Publishing: "%s"' % msg.data)
         self.i += 1
+
+        timestamp = self.get_clock().now().to_msg()
+        simulation_time_msg = FloatMsg()
+        simulation_time_msg.data = self.current_time
+        self._publisher_simulation_time.publish(simulation_time_msg)
+
+    @property
+    def current_time(self):
+        if (self._t0 is None):
+            return 0.0
+        else:
+            current_t_ns = self.get_clock().now().nanoseconds
+            return (current_t_ns - self._t0.nanoseconds)*(1e-9)
 
 
 def main(args=None):
