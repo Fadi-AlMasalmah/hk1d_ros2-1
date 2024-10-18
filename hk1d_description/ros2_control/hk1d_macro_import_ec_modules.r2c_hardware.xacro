@@ -29,9 +29,9 @@
         <xacro:unless value="${use_fake_hardware}">
           <ec_module name="${prefix}motor_Maxon">
             <plugin>ethercat_generic_plugins/EcCiA402Drive</plugin>
-            <param name="alias"> 0 </param>
-            <param name="position"> ${motor_ec_id} </param>
-            <param name="mode_of_operation"> 10 </param>
+            <param name="alias">0</param>
+            <param name="position">${motor_ec_id}</param>
+            <param name="mode_of_operation">10</param>
             <param name="slave_config">${ec_config_package}/config/${ec_motor_config_file}</param>
           </ec_module>
         </xacro:unless>

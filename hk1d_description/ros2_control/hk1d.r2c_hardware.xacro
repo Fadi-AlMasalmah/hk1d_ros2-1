@@ -3,7 +3,7 @@
 
     <xacro:macro
         name="hk1d_r2c_hardware"
-        params="prefix use_sim use_fake_hardware command_interface runtime_config_package control_freq">
+        params="prefix use_sim use_fake_hardware command_interface runtime_config_package control_freq motor_ec_id sensor_ec_id">
 
     <!-- //////////////////// ROS2 control //////////////////////-->
     <ros2_control name="hk1d_based_system" type="system">
@@ -32,8 +32,8 @@
             prefix="$(arg prefix)"
             use_fake_hardware="$(arg use_fake_hardware)"
             command_interface="$(arg command_interface)"
-            motor_ec_id="0"
-            sensor_ec_id="1"
+            motor_ec_id="$(arg motor_ec_id)"
+            sensor_ec_id="$(arg sensor_ec_id)"
             ec_config_package="$(find ${runtime_config_package})"
             ec_motor_config_file="maxon_epos3_config.yaml"
             ec_sensor_config_file="force_slave_config.yaml"

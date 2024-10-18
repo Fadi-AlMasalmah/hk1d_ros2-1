@@ -15,7 +15,7 @@
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -27,7 +27,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'runtime_config_package',
-            default_value='hk1d_bringup',
+            default_value='identification_bringup',
             description='Config package with the various runtime config files (ros2 controllers, gazebo, etc.).',
         )
     )
@@ -100,7 +100,7 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name='xacro')]),
             ' ',
             PathJoinSubstitution(
-                [FindPackageShare(description_package), 'config', description_file]
+                [FindPackageShare('identification_bringup'), 'config', description_file]
             ),
             ' ',
             'prefix:=', prefix,
@@ -153,7 +153,7 @@ def generate_launch_description():
         [
             FindPackageShare(runtime_config_package),
             'config',
-            'hk1d_controllers.yaml',
+            'hk1d_ident_controllers.yaml',
         ]
     )
 
@@ -205,7 +205,13 @@ def generate_launch_description():
         package="controller_manager",
         executable="spawner",
         arguments=["forward_effort_controller", "--controller-manager", "/controller_manager"],
-        condition=IfCondition(use_fake_hardware),
+        condition=UnlessCondition(use_fake_hardware),
+    )
+
+    identification_controller_closed_loop_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["identification_controller_cl", "--controller-manager", "/controller_manager"],
     )
 
     nodes = [
@@ -213,8 +219,9 @@ def generate_launch_description():
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
         force_sensor_broadcaster_spawner,
-        mock_system_spawner,
-        force_forward_controller_spawner,
+        # mock_system_spawner,
+        # force_forward_controller_spawner,
+        identification_controller_closed_loop_spawner,
         rviz_node,
     ]
 

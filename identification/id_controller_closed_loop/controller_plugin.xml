@@ -1,0 +1,7 @@
+<library path="identification_controller_cl">
+  <class name="identification_controller_cl/IdentificationControllerCL" type="identification_controller_cl::IdentificationControllerCL" base_class_type="controller_interface::ControllerInterface">
+  <description>
+    This controller is used to identify the parameters of the robot in "Closed Loop", it reads position inputs from an external topic (ref_pos) and then applies a gain to the motors to achieve this input, the goal here is to keep the position of the robot limited, but the identification happens from torque to position.
+  </description>
+  </class>
+</library>

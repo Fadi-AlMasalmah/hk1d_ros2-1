@@ -8,12 +8,12 @@
     <xacro:arg name="namespace" default="/" />
     <xacro:arg name="command_interface" default="force" />
     <xacro:arg name="control_freq" default="200" />
-    <xacro:arg name="motor_ec_id" default="0" />
-    <xacro:arg name="sensor_ec_id" default="1" />
+    <xacro:arg name="motor_ec_id" default="2" />
+    <xacro:arg name="sensor_ec_id" default="3" />
 
     <xacro:arg name="description_package" default="hk1d_description" />
-    <xacro:arg name="runtime_config_package" default="hk1d_bringup" />
-    <xacro:arg name="controllers_file" default="hk1d_controllers.yaml" />
+    <xacro:arg name="runtime_config_package" default="identification_bringup" />
+    <xacro:arg name="controllers_file" default="hk1d_ident_controllers.yaml" />
 
     <xacro:property name="description_package" value="$(arg description_package)"/>
 

@@ -1,0 +1,7 @@
+<library path="identification_controller">
+  <class name="identification_controller/IdentificationController" type="identification_controller::IdentificationController" base_class_type="controller_interface::ControllerInterface">
+  <description>
+    This controller is used to identify the parameters of the robt, it reads inputs from a yaml file, and send them to the motors.
+  </description>
+  </class>
+</library>
