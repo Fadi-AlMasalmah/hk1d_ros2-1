@@ -16,6 +16,10 @@
   <depend>realtime_tools</depend>
   <depend>trajectory_msgs</depend>
 
+  <!-- custome msgs -->
+  <exec_depend>stamped_array_msgs</exec_depend>
+  <exec_depend>hk1d_interfaces</exec_depend>
+
   <build_depend>pluginlib</build_depend>
 
   <export>

@@ -25,12 +25,12 @@
 #include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
 #include "rclcpp_lifecycle/state.hpp"
 #include "realtime_tools/realtime_buffer.h"
-// #include "trajectory_msgs/msg/joint_trajectory.hpp"
+#include "trajectory_msgs/msg/joint_trajectory.hpp"
 #include "std_msgs/msg/float64.hpp"
 
 namespace identification_controller_cl
 {
-using CmdType = std_msgs::msg::Float64; //trajectory_msgs::msg::JointTrajectory;
+using CmdType = trajectory_msgs::msg::JointTrajectory; // std_msgs::msg::Float64; 
 using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 /**

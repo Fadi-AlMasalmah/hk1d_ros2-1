@@ -227,7 +227,8 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
     return controller_interface::return_type::OK;
   }
   //checking ref_pos data validity
-  ref_pos = (*ref_pos_msg)->data;
+  // ref_pos = (*ref_pos_msg)->data;
+  ref_pos = (*ref_pos_msg)->points[0].positions[0];
   if (ref_pos < min_pos_[0]) 
   {
     ref_pos = min_pos_[0];

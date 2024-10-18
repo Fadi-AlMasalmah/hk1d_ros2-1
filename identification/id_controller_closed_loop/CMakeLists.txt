@@ -19,6 +19,8 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(realtime_tools REQUIRED)
 find_package(trajectory_msgs REQUIRED)
+find_package(hk1d_interfaces REQUIRED)
+find_package(stamped_array_msgs REQUIRED)
 
 add_library(identification_controller_cl
   SHARED
@@ -34,6 +36,8 @@ ament_target_dependencies(identification_controller_cl
   rcutils
   realtime_tools
   trajectory_msgs
+  hk1d_interfaces
+  stamped_array_msgs
 )
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
