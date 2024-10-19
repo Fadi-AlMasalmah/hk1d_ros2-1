@@ -287,7 +287,7 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
     // msg.joint_name = joint_names_[index];
     msg.measured_joint_position = state_interfaces_[0].get_value();
     msg.measured_joint_velocity = state_interfaces_[1].get_value();
-    msg.measured_joint_effort = state_interfaces_[1].get_value();
+    msg.measured_joint_effort = state_interfaces_[2].get_value();
     msg.reference_joint_position = ref_pos;
     msg.reference_effort = tau;
     identification_publisher_->publish(msg);

@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'identification_node = identification_node.identification_node:main',
+            'ref_pos_publisher = identification_node.ref_pos_publisher:main',
         ],
     },
 )

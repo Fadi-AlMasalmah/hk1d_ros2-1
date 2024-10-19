@@ -55,6 +55,7 @@ class IdentificationNode(Node):
         # self.get_logger().info('Publishing: "%s"' % msg.data)
         self.i += 1
 
+        # publish simulation time
         timestamp = self.get_clock().now().to_msg()
         simulation_time_msg = FloatMsg()
         simulation_time_msg.data = self.current_time
