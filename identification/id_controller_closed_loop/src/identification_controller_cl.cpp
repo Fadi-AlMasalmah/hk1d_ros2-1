@@ -51,6 +51,8 @@ CallbackReturn IdentificationControllerCL::on_init()
     auto_declare<std::vector<double>>("delay_at_start",std::vector<double>());
     auto_declare<std::vector<double>>("ref_poses", std::vector<double>());
     auto_declare<std::vector<double>>("Kp", std::vector<double>());
+    auto_declare<std::vector<double>>("Kd", std::vector<double>());
+    auto_declare<std::string>("IDENTIFICATION_MODE", std::string("external_force"));
   }
   catch (const std::exception & e)
   {
@@ -84,6 +86,17 @@ CallbackReturn IdentificationControllerCL::on_configure(
   delay_at_start_ = (int) del[0];
   max_pos_ = get_node()->get_parameter("max_pos").as_double_array();
   min_pos_ = get_node()->get_parameter("min_pos").as_double_array();
+  IDENTIFICATION_MODE = get_node()->get_parameter("IDENTIFICATION_MODE").as_string();
+  if(IDENTIFICATION_MODE != "external_force" && IDENTIFICATION_MODE != "ref_pos")
+  {
+    RCLCPP_ERROR(get_node()->get_logger(), "IDENTIFICATION_MODE should be either 'external_force' or 'ref_pos'");
+    return CallbackReturn::FAILURE;
+  }
+  else
+  {
+    RCLCPP_INFO(get_node()->get_logger(), "Identification mode is %s", IDENTIFICATION_MODE.c_str());
+  }
+    
 
   // ref_poses_ = get_node()->get_parameter("ref_poses").as_double_array();
   // RCLCPP_INFO(get_node()->get_logger(), "ref_poses is of length : %d",ref_poses_.size());
@@ -148,6 +161,7 @@ IdentificationControllerCL::state_interface_configuration() const
       conf.names.push_back(joint_name + "/" + hardware_interface::HW_IF_POSITION);
       conf.names.push_back(joint_name + "/" + hardware_interface::HW_IF_VELOCITY);
       conf.names.push_back(joint_name + "/" + hardware_interface::HW_IF_EFFORT);
+      conf.names.push_back("force_sensor/force.0");
   }
   return conf;
 }
@@ -223,6 +237,26 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
       reset_fault_sent_ = true;
   }
 
+  if(IDENTIFICATION_MODE == "external_force") // identification assuming input is external force, no motor torque
+  {
+
+    double tau = 0; 
+    command_interfaces_[0].set_value(tau);
+
+    // fill the identification message
+    auto msg = hk1d_identification_interfaces::msg::Hk1dIdentification();
+    msg.header.stamp = time;
+    msg.measured_joint_position = state_interfaces_[0].get_value();
+    msg.measured_joint_velocity = state_interfaces_[1].get_value();
+    msg.measured_joint_effort = state_interfaces_[2].get_value();
+    msg.reference_joint_position = 0;
+    msg.reference_effort = 0;
+    msg.external_effort = state_interfaces_[3].get_value();
+    identification_publisher_->publish(msg);
+
+    return controller_interface::return_type::OK;
+  }
+
   // getting the data from the subscriber using the rt pipe
   auto ref_pos_msg = rt_command_ptr_.readFromRT();
   // no command received yet
@@ -232,6 +266,7 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
   }
   //checking ref_pos data validity
   // ref_pos = (*ref_pos_msg)->data;
+
   ref_pos = (*ref_pos_msg)->points[0].positions[0];
   if (ref_pos < min_pos_[0]) 
   {
@@ -242,25 +277,14 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
     ref_pos = max_pos_[0];
   }
 
-  //Impedance control loop
+
   for (auto index = 0ul; index < joint_names_.size(); ++index)
   {
     double tau = 0;
-    // double x_d = ref_pos;
-    // if(point_id < ref_poses_.size())
-    //    x_d = ref_poses_[point_id];
   
     tau = Kp_[0] * (ref_pos - state_interfaces_[0].get_value()) + Kd_[0] * (0 - state_interfaces_[1].get_value()) ;
     
     
-
-    //Test to make the robot moves by it self
-    // if((state_interfaces_[0].get_value() > max_pos && state_interfaces_[1].get_value() > 0) || (state_interfaces_[0].get_value() < -max_pos && state_interfaces_[1].get_value() < 0))
-    //   tau = -tau;    
-    // if( tau > 0)  //state_interfaces_[0].get_value() > 2 &&
-    //     tau += 37;
-    // if(tau < 0)
-    //     tau -= 37;
 
     if(tau > max_torque_[index]) 
       tau = max_torque_[index];
@@ -276,13 +300,6 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
   
     // fill the identification message
     auto msg = hk1d_identification_interfaces::msg::Hk1dIdentification();
-    // std_msgs/String joint_name
-    // std_msgs/Float64 measured_joint_position
-    // std_msgs/Float64 measured_joint_velocity
-    // std_msgs/Float64 measured_joint_effort
-    // std_msgs/Float64 measured_joint_acceleration
-    // std_msgs/Float64 reference_joint_position
-    // std_msgs/Float64 reference_effort
     msg.header.stamp = time;
     // msg.header.frame_id = "base_link";
     // msg.joint_name = joint_names_[index];
@@ -291,6 +308,7 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
     msg.measured_joint_effort = state_interfaces_[2].get_value();
     msg.reference_joint_position = ref_pos;
     msg.reference_effort = tau;
+    msg.external_effort = state_interfaces_[3].get_value();
     identification_publisher_->publish(msg);
   }
 

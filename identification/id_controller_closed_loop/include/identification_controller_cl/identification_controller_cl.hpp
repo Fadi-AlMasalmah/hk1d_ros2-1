@@ -97,6 +97,7 @@ protected:
   std::vector<double> max_pos_ = {0.3};
   std::vector<double> min_pos_ = {-0.3};
   double ref_pos = 0;
+  std::string IDENTIFICATION_MODE = "external_force"; //  for closed loop identification with motor torque as input, and position reference comes from topic. "external_force" for identification with force sensor as input.
 
   realtime_tools::RealtimeBuffer<std::shared_ptr<CmdType>> rt_command_ptr_;
   rclcpp::Subscription<CmdType>::SharedPtr joints_command_subscriber_;

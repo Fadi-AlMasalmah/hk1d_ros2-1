@@ -87,7 +87,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'motor_ec_id',
-            default_value='0',
+            default_value='2',
             description='ethercat slave id of the motor. In our setup, red master is 2, blue slave is 0.',
         )
     )
@@ -95,7 +95,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'sensor_ec_id',
-            default_value='1',
+            default_value='3',
             description='ethercat slave id of the force sensor. In our setup, red master is 3, blue slave is 1.',
         )
     )

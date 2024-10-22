@@ -8,3 +8,4 @@ float64 measured_joint_position
 float64 measured_joint_acceleration
 float64 reference_joint_position
 float64 reference_effort
+float64 external_effort
