@@ -7,7 +7,7 @@
     <xacro:arg name="prefix" default="" />
     <xacro:arg name="namespace" default="/" />
     <xacro:arg name="command_interface" default="force" />
-    <xacro:arg name="control_freq" default="200" />
+    <xacro:arg name="control_freq" default="500" />
     <xacro:arg name="motor_ec_id" default="2" />
     <xacro:arg name="sensor_ec_id" default="3" />
 

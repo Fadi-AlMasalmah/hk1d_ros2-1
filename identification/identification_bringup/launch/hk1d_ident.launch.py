@@ -42,7 +42,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             'description_file',
-            default_value='hk1d.config.xacro',
+            default_value='hk1d_ident.config.xacro',
             description='URDF/XACRO description file with the robot.',
         )
     )
@@ -84,6 +84,22 @@ def generate_launch_description():
         )
     )
 
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'motor_ec_id',
+            default_value='0',
+            description='ethercat slave id of the motor. In our setup, red master is 2, blue slave is 0.',
+        )
+    )
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'sensor_ec_id',
+            default_value='1',
+            description='ethercat slave id of the force sensor. In our setup, red master is 3, blue slave is 1.',
+        )
+    )
+
     # Initialize Arguments
     runtime_config_package = LaunchConfiguration('runtime_config_package')
     description_package = LaunchConfiguration('description_package')
@@ -93,6 +109,8 @@ def generate_launch_description():
     use_sim = LaunchConfiguration('use_sim')
     use_fake_hardware = LaunchConfiguration('use_fake_hardware')
     command_interface = LaunchConfiguration('command_interface')
+    ec_motor_id = LaunchConfiguration('motor_ec_id')
+    ec_sensor_id = LaunchConfiguration('sensor_ec_id')
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -116,6 +134,10 @@ def generate_launch_description():
             'description_package:=', description_package,
             ' ',
             'runtime_config_package:=', runtime_config_package,
+            ' ',
+            'motor_ec_id:=', ec_motor_id,
+            ' ',
+            'sensor_ec_id:=', ec_sensor_id,
         ]
     )
 
