@@ -106,7 +106,7 @@ def main(args=None):
     max_position = 0.4
     min_position = -0.4
     Ts = 0.002  # Sampling period of 0.1 seconds
-    offset_position = 0.3 # Offset position for the signal (blue robot should be added 0.3 to avoid limits)
+    offset_position = 0.0 # Offset position for the signal (blue robot should be added 0.3 to avoid limits)
 
     # Create the publisher node
     signal_publisher = RefPosPublisher(joint_name, max_position, min_position, Ts, offset_position)

@@ -3,3 +3,7 @@ repositories:
     type: git
     url: https://github.com/ICube-Robotics/ethercat_driver_ros2.git
     version: v1.1.0
+  external/nml_bag_ros2:
+      type: git
+      url: https://github.com/ICube-Robotics/nml_bag_ros2.git
+      version: main
