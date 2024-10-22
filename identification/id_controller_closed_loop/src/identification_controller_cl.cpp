@@ -147,6 +147,7 @@ IdentificationControllerCL::state_interface_configuration() const
   {
       conf.names.push_back(joint_name + "/" + hardware_interface::HW_IF_POSITION);
       conf.names.push_back(joint_name + "/" + hardware_interface::HW_IF_VELOCITY);
+      conf.names.push_back(joint_name + "/" + hardware_interface::HW_IF_EFFORT);
   }
   return conf;
 }
