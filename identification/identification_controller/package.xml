@@ -2,7 +2,7 @@
 <package format="3">
   <name>identification_controller</name>
   <version>0.0.1</version>
-  <description>identification controller.</description>
+  <description>identification controller. Takes list of points in the yaml as input (tq) </description>
   <maintainer email="m.bednarczyk@unistra.fr">m.bednarczyk</maintainer>
 
   <license>Apache License 2.0</license>

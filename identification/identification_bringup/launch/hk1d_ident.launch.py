@@ -109,8 +109,8 @@ def generate_launch_description():
     use_sim = LaunchConfiguration('use_sim')
     use_fake_hardware = LaunchConfiguration('use_fake_hardware')
     command_interface = LaunchConfiguration('command_interface')
-    ec_motor_id = LaunchConfiguration('motor_ec_id')
-    ec_sensor_id = LaunchConfiguration('sensor_ec_id')
+    motor_ec_id = LaunchConfiguration('motor_ec_id')
+    sensor_ec_id = LaunchConfiguration('sensor_ec_id')
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -135,9 +135,9 @@ def generate_launch_description():
             ' ',
             'runtime_config_package:=', runtime_config_package,
             ' ',
-            'motor_ec_id:=', ec_motor_id,
+            'motor_ec_id:=', motor_ec_id,
             ' ',
-            'sensor_ec_id:=', ec_sensor_id,
+            'sensor_ec_id:=', sensor_ec_id,
         ]
     )
 

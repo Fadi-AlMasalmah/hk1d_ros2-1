@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>hk1d_identification_notebooks</name>
+  <version>0.0.1</version>
+  <description>
+    Some basic plotting utils for experimental results
+  </description>
+  <maintainer email="fadi.almasalmah94@gmail.com">Fadi Almasalmah</maintainer>
+  <license>Apache License 2.0</license>  <!-- the contents of this package are Apache 2.0 -->
+
+  <exec_depend>nml_bag_ros2</exec_depend>
+
+  <exec_depend>python3-ipykernel</exec_depend>
+  <exec_depend>python3-scipy</exec_depend>
+  <exec_depend>python3-tqdm</exec_depend>
+  <exec_depend>python3-matplotlib</exec_depend>
+  <exec_depend>python3-seaborn</exec_depend>
+  <exec_depend>python3-pyqt5</exec_depend>
+  <exec_depend>python3-scienceplots</exec_depend>
+
+</package>
