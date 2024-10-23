@@ -131,6 +131,7 @@ public:
   double x_fric_scale = 0.03; //
   double get_friction_1( double v , double x, double x_ref);
   double get_friction_2( double v , double u);
+  double get_friction_3_noise(double v);
 
 protected:
   std::vector<std::string> joint_names_;

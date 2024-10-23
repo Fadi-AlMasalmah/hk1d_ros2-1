@@ -245,10 +245,19 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
       reset_fault_sent_ = true;
   }
 
+  vel_filtered_.update(state_interfaces_[1].get_value());
+
   if(IDENTIFICATION_MODE == "external_force") // identification assuming input is external force, no motor torque
   {
 
     double tau = 0; 
+    double tau_fric = 0*get_friction_3_noise(vel_filtered_.get_output());
+    tau += tau_fric;
+
+    if(tau > max_torque_[0]) 
+      tau = max_torque_[0];
+    else if (tau < -max_torque_[0])
+      tau = -max_torque_[0];
     command_interfaces_[0].set_value(tau);
 
     // fill the identification message
@@ -259,6 +268,7 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
     msg.measured_joint_effort = state_interfaces_[2].get_value();
     msg.reference_joint_position = 0;
     msg.reference_effort = 0;
+    msg.friction_compensation = tau_fric;
     msg.external_effort = state_interfaces_[3].get_value();
     identification_publisher_->publish(msg);
 
@@ -289,13 +299,14 @@ controller_interface::return_type IdentificationControllerCL::update(const rclcp
   // for (auto index = 0ul; index < joint_names_.size(); ++index)
   // {
     double tau = 0;
-    vel_filtered_.update(state_interfaces_[1].get_value());
     double tau_c = Kp_[0] * (ref_pos - state_interfaces_[0].get_value()) + Kd_[0] * (0 - vel_filtered_.get_output());
     
     // compensate friction
     // double tau_fric = get_friction_1(state_interfaces_[1].get_value(), state_interfaces_[0].get_value(), ref_pos);
-    double tau_fric = get_friction_2(vel_filtered_.get_output(), tau_c);
+    // double tau_fric = get_friction_2(vel_filtered_.get_output(), tau_c);
+    double tau_fric = 0*get_friction_3_noise(vel_filtered_.get_output());
     tau = tau_c + tau_fric;
+    
     if(tau > max_torque_[0]) 
       tau = max_torque_[0];
     else if (tau < -max_torque_[0])
@@ -355,6 +366,22 @@ double IdentificationControllerCL::get_friction_2( double v , double u)
   {
     return u_fric_v;
   }
+}
+
+double IdentificationControllerCL::get_friction_3_noise(double v)
+{
+  // #include <random>
+  // static std::default_random_engine generator;
+  // static std::normal_distribution<double> distribution(0.0, 0.1); // mean 0, std 0.1
+
+  double noise = 0.0;
+  if(std::abs(v) < static_v_threshold)
+  {
+  // adding white noise with a mean 0 and a standard deviation of 0.1
+    noise = 0.8*fric_static * (rand() % 1000 - 500)/1000.0;
+    RCLCPP_INFO(get_node()->get_logger(), "friction noise = %f", noise);
+  }
+  return noise;
 }
 
 } // namespace identification_controller_cl
