@@ -63,4 +63,4 @@ identification_controller_cl:
     dela_at_start_in_counts: [300.0] # how many time steps, however double for now
     max_pos : [0.6]
     min_pos : [-0.6]
-    IDENTIFICATION_MODE: external_force # external_force, ref_pos
+    IDENTIFICATION_MODE: ref_pos # external_force, ref_pos

@@ -18,6 +18,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <cmath>
 
 #include "controller_interface/controller_interface.hpp"
 #include "identification_controller_cl/visibility_control.h"
@@ -34,6 +35,47 @@ namespace identification_controller_cl
 {
 using CmdType = trajectory_msgs::msg::JointTrajectory; // std_msgs::msg::Float64; 
 using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+
+// Defining a class for Lowpass filtering a signal with cutoff frequency freq and sampling time Ts
+class LowPassFilter
+{
+public:
+  LowPassFilter(double freq, double Ts);
+  double update(double x);
+  double get_output();
+  void reset();
+private:
+  double freq_;
+  double Ts_;
+  double alpha_;
+  double output_;
+};
+
+LowPassFilter::LowPassFilter(double freq, double Ts)
+{
+  freq_ = freq;
+  Ts_ = Ts;
+  // alpha_ = 2 * M_PI * freq_ * Ts_;
+  alpha_ = 1.0 - exp(-Ts * 2 * M_PI * freq);
+  output_ = 0;
+}
+
+double LowPassFilter::update(double x)
+{
+  output_ = alpha_ * x + (1 - alpha_) * output_;
+  return output_;
+}
+
+double LowPassFilter::get_output()
+{
+  return output_;
+}
+
+void LowPassFilter::reset()
+{
+  output_ = 0;
+}
+
 
 /**
  * \brief Impedance controller for a set of joints.
@@ -81,6 +123,15 @@ public:
   IDENTIFICATION_CONTROLLER_CL_PUBLIC
   controller_interface::return_type update(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
+  //Friction parameters
+  double fric_static = 0.0524;
+  double fric_move_coeff = 0.926;
+  double static_v_threshold = 0.01; // smaller than this value, the friction is static
+  double v_fric_scale = 0.7; //
+  double x_fric_scale = 0.03; //
+  double get_friction_1( double v , double x, double x_ref);
+  double get_friction_2( double v , double u);
+
 protected:
   std::vector<std::string> joint_names_;
   // std::vector<double> stiffness_;
@@ -97,6 +148,11 @@ protected:
   std::vector<double> max_pos_ = {0.3};
   std::vector<double> min_pos_ = {-0.3};
   double ref_pos = 0;
+
+  // Filtering Velocity
+  LowPassFilter vel_filtered_ = LowPassFilter(100, 0.002);
+
+  
   std::string IDENTIFICATION_MODE = "external_force"; //  for closed loop identification with motor torque as input, and position reference comes from topic. "external_force" for identification with force sensor as input.
 
   realtime_tools::RealtimeBuffer<std::shared_ptr<CmdType>> rt_command_ptr_;
@@ -109,5 +165,9 @@ protected:
 };
 
 }  // namespace identification_controller_cl
+
+
+
+
 
 #endif  // IDENTIFICATION_CONTROLLER_CL__IDENTIFICATION_CONTROLLER_CL_HPP_
