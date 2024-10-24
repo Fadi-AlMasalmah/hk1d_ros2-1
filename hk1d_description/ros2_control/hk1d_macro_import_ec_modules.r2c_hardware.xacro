@@ -40,7 +40,9 @@
       <!-- ft sensor (ethercat) -->
 
       <sensor name="${prefix}force_sensor">
-          <state_interface name="force.0"/>
+          <state_interface name="force.0">
+              <param name="initial_value">0.0</param>
+          </state_interface>
 
           <xacro:unless value="${use_fake_hardware}">
               <ec_module name="${prefix}force_sensor">
